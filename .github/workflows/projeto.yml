@@ -1,0 +1,50 @@
+# This workflow will build a Java project with Ant
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-ant
+
+name: Java CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        
+    - name: Compilar
+      run: javac -cp src src/Main.java
+      
+    - name: Compilar Evento
+      run: javac -cp src src/Catraca.java
+      
+    - name: Compilar Catraca
+      run: javac -cp src src/Evento.java 
+      
+    - name: Compilar Teste
+      run: javac -cp src src/ClasseTeste.java
+      
+    - name: Executar Teste
+      run: |
+        cd src 
+        java ClasseTeste
+        
+    - uses: mr-smithers-excellent/docker-build-push@v6
+      name: Build & push Docker image
+      with:
+          image: diogolimaieg/simulado_git_action
+          tags: 1.0, 1.1
+          registry: docker.io
+          dockerfile: dockerfile
+          username: ${{ secrets.DOCKER_USUARIO }}   
+          password: ${{ secrets.DOCKER_SENHA }}
