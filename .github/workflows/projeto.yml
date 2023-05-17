@@ -47,7 +47,7 @@ jobs:
       name: Build & push Docker image
       with:
           image: diogolimaieg/simulado_git_action
-          tags: DEV-v:${{github.run_number}}
+          tags: DEV-v ${{github.run_number}}
           registry: docker.io
           dockerfile: dockerfile
           username: ${{ secrets.DOCKER_USUARIO }}   
